@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techno Stopwatch</title>
+    <style>
+        /* Body and Background */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .background {
+            width: 100%;
+            height: 100vh;
+            background-color: #000;
+            background-image: url('https://wallpapers.com/images/hd/banner-background-jcd538z62euhfpkx.jpg'); /* Replace with your desired image URL */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* Bird animation */
+        .bird {
+            width: 200px;
+            height: 200px;
+            background: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/25d61bf1-4b18-4e5e-bd90-2c74c4f1f4fd/d8iayp5-c74423da-05b5-492c-8d98-e1e4f0751cdc.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzI1ZDYxYmYxLTRiMTgtNGU1ZS1iZDkwLTJjNzRjNGYxZjRmZFwvZDhpYXlwNS1jNzQ0MjNkYS0wNWI1LTQ5MmMtOGQ5OC1lMWU0ZjA3NTFjZGMuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.eHrjBbyKl6V8MYO5bIX1zSJbhuerUEemultMaNxUXIU') no-repeat center;
+            background-size: contain;
+            position: absolute;
+            top: 10%;
+        }
+
+        /* Bird animation class */
+        .fly {
+            animation: fly 8s linear infinite;
+        }
+
+        @keyframes fly {
+            0% { left: -10%; transform: translateY(0); }
+            50% { left: 50%; transform: translateY(-20px); }
+            100% { left: 110%; transform: translateY(0); }
+        }
+
+        /* Stopwatch Container */
+        .stopwatch-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            z-index: 1;
+        }
+
+        .stopwatch {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .buttons button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #00bcd4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .buttons button:hover {
+            background-color: #008c9e;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <!-- Bird animation -->
+        <div class="bird" id="bird"></div>
+
+        <!-- Stopwatch container -->
+        <div class="stopwatch-container">
+            <h1 class="stopwatch" id="stopwatch">00:00:00</h1>
+            <div class="buttons">
+                <button id="startButton">Start</button>
+                <button id="stopButton">Stop</button>
+                <button id="resetButton">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let stopwatchInterval;
+        let elapsedTime = 0;
+        let running = false;
+
+        const stopwatchDisplay = document.getElementById('stopwatch');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const resetButton = document.getElementById('resetButton');
+        const bird = document.getElementById('bird');
+
+        startButton.addEventListener('click', startStopwatch);
+        stopButton.addEventListener('click', stopStopwatch);
+        resetButton.addEventListener('click', resetStopwatch);
+
+        function startStopwatch() {
+            if (!running) {
+                running = true;
+                bird.classList.add('fly'); // Start bird animation
+                stopwatchInterval = setInterval(() => {
+                    elapsedTime += 10;
+                    stopwatchDisplay.textContent = formatTime(elapsedTime);
+                }, 10);
+            }
+        }
+
+        function stopStopwatch() {
+            if (running) {
+                clearInterval(stopwatchInterval);
+                running = false;
+                bird.classList.remove('fly'); // Stop bird animation
+            }
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            running = false;
+            elapsedTime = 0;
+            stopwatchDisplay.textContent = '00:00:00';
+            bird.classList.remove('fly'); // Reset bird animation
+        }
+
+        function formatTime(ms) {
+            const minutes = String(Math.floor(ms / 60000)).padStart(2, '0');
+            const seconds = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
+            const milliseconds = String(Math.floor((ms % 1000) / 10)).padStart(2, '0');
+            return `${minutes}:${seconds}:${milliseconds}`;
+        }
+    </script>
+</body>
+</html>
